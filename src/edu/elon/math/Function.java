@@ -8,6 +8,11 @@
 package edu.elon.math;
 
 
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
 /*
  * Copyright October 10, 2016
  *
@@ -25,9 +30,14 @@ import java.util.Observable;
  * @author dpowell2
  * @version 1.0
  */
-public abstract class Function extends Observable{
+public abstract class Function extends Observable implements Remote, Serializable{
 
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8643733787434604787L;
+
+/**
    * constant to represent new line
    */
   public static final String EOL = "\n";
@@ -55,8 +65,8 @@ public abstract class Function extends Observable{
   /**
    * Default constructor
    */
-  public Function() {
-    // empty
+  public Function(){
+//    Remote r = UnicastRemoteObject.exportObject(this, 0);
   }
   
   public void setStrategy(Strategy aStrategy){

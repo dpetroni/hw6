@@ -10,7 +10,6 @@ package edu.elon.math;
  * this class contains the main method to start the application
  */
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -24,8 +23,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-
 import javafx.scene.control.ComboBox;
 
 
@@ -36,7 +33,11 @@ import javafx.scene.control.ComboBox;
  */
 public class FunctionGuiApplication extends JFrame {
 
-  private static String[] envResult;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3142558297899374758L;
+private static String[] envResult;
 
   public static void main(String[] args){
  

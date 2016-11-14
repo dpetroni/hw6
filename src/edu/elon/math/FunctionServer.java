@@ -7,10 +7,11 @@ public class FunctionServer {
 	
 	public static void main(String[] args){
 		
-	    System.setProperty("java.security.policy", "server.policy");
-	    System.setSecurityManager(new SecurityManager());
+
 		
 		try{
+		    System.setProperty("java.security.policy", "server.policy");
+		    System.setSecurityManager(new SecurityManager());
 			System.out.println("creating functions...");
 			Dell dell = new Dell();
 			SamsClub samsClub = new SamsClub();
@@ -18,7 +19,7 @@ public class FunctionServer {
 			String env = "edu.elon.math.NelderMead,edu.elon.math.RandomWalk,edu.elon.math.Powell";
 			System.out.println("binding to registry...");
 			Context namingContext = new InitialContext();
-			namingContext.bind("rmi:env", env);
+			//namingContext.bind("rmi:env", env);
 			namingContext.bind("rmi:Dell", dell);
 			namingContext.bind("rmi:SamsClub", samsClub);
 			namingContext.bind("rmi:MinimumAbsoluteSum", mas);
