@@ -14,6 +14,7 @@ import com.cureos.numerics.Calcfc;
 import com.cureos.numerics.Cobyla;
 import com.cureos.numerics.CobylaExitStatus;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 /**
@@ -48,15 +49,16 @@ public class Powell implements Strategy{
    * 
    * @param function Function model to be optimized
    * @return optimal value found.
+ * @throws RemoteException 
    */
-  public Double getOptimalValue(Function function) {
+  public Double getOptimalValue(FunctionInterface function) throws RemoteException {
     ArrayList<Double> startingPoint = function.getInputValues();
     double[] inputArray = convertArrayListToDouble(startingPoint);
     int numberInputs = inputArray.length;
     Calcfc calcfc = new Calcfc() {
 
       @Override
-      public double Compute(int aN, int aM, double[] aX, double[] aCon) {
+      public double Compute(int aN, int aM, double[] aX, double[] aCon) throws RemoteException {
         function.setInputValues(convertDoubleArrayToArrayList(aX));
         function.valuesChanged();
         double result = function.evaluate();

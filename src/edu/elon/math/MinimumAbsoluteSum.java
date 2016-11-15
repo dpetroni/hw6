@@ -1,5 +1,7 @@
 package edu.elon.math;
 
+import java.rmi.RemoteException;
+
 /*
  * Copyright October 10, 2016
  *
@@ -17,8 +19,9 @@ public class MinimumAbsoluteSum extends Function{
 
   /**
    * Default constructor to set initial input point to (0, 0)
+ * @throws RemoteException 
    */
-  public MinimumAbsoluteSum() {
+  public MinimumAbsoluteSum() throws RemoteException {
     this(new double[] { -100, 100, -100, 100,-100, 100,-100, 100,-100, 100 });
 
   }
@@ -29,8 +32,9 @@ public class MinimumAbsoluteSum extends Function{
    * 
    * @param inputValues ArrayList<Double> representing values for
    *        initial design point.
+ * @throws RemoteException 
    */
-  public MinimumAbsoluteSum(ArrayList<Double> inputValues) {
+  public MinimumAbsoluteSum(ArrayList<Double> inputValues) throws RemoteException {
     this(inputValues, createDefaultInputNames());
   }
 
@@ -43,7 +47,7 @@ public class MinimumAbsoluteSum extends Function{
    * @param inputNames ArrayList<String> representing names of each
    *        input parameter
    */
-  public MinimumAbsoluteSum(ArrayList<Double> inputValues, ArrayList<String> inputNames) {
+  public MinimumAbsoluteSum(ArrayList<Double> inputValues, ArrayList<String> inputNames) throws RemoteException{
     this.setInputValues(inputValues);
     this.setInputNames(inputNames);
     this.setMinimize(true);
@@ -57,7 +61,7 @@ public class MinimumAbsoluteSum extends Function{
    * @param inputs double[] array of values to set initial design
    *        point.
    */
-  public MinimumAbsoluteSum(double[] inputs) {
+  public MinimumAbsoluteSum(double[] inputs) throws RemoteException{
     ArrayList<Double> values = new ArrayList<Double>();
     for (double d : inputs) {
       values.add(new Double(d));
@@ -93,9 +97,10 @@ public class MinimumAbsoluteSum extends Function{
    * Evaluates the function from the current set of input values.
    * 
    * @return Double instance of function value
+ * @throws RemoteException 
    */
   @Override
-  public Double evaluate() {
+  public Double evaluate() throws RemoteException {
 	  double sum = 0;
 	  for (int i = 0; i < getInputValues().size(); i++){
 		  sum = sum + Math.abs(getInputValues().get(i));

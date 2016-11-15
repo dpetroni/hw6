@@ -7,6 +7,8 @@
  */
 package edu.elon.math;
 
+import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import flanagan.math.*;
 
@@ -30,7 +32,7 @@ import java.util.Vector;
  * @author dpowell2
  * @version 1.0
  */
-public class NelderMead implements Strategy{
+public class NelderMead implements Strategy, Serializable{
 
   private final double initialSimplexSize = .5;
   private int nDim;
@@ -67,12 +69,12 @@ public class NelderMead implements Strategy{
    * compatible with the nelderMead method.
    */
   public class GetFunction implements MinimisationFunction{
-  	private Function f;
+  	private FunctionInterface f;
   /**
    * Default constructor to satisfy coding best practices
    */
-  	public GetFunction(Function f){
-  		this.f = f;
+  	public GetFunction(FunctionInterface function){
+  		this.f = function;
   	}
   /**
    * converts the passed array into an arrayList
@@ -88,12 +90,28 @@ public class NelderMead implements Strategy{
    * converts the array back into an arrayList, and populates the input fields with the correct values.
    */  	
 		@Override
-		public double function(double[] param) {
+		public double function(double[] param){
 			ArrayList<Double> inputs = convertDoubleArrayToArrayList(param);
-			f.setInputValues(inputs);
-			double a = f.evaluate();
-			if(f.isMinimize()){
-				return a;
+			try {
+				f.setInputValues(inputs);
+			} catch (RemoteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			double a = 0;
+			try {
+				a = f.evaluate();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				if(f.isMinimize()){
+					return a;
+				}
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			return a*(-1);
 			
@@ -109,8 +127,9 @@ public class NelderMead implements Strategy{
    * @param function Function instance containing function starting
    *        point and evaluation logic
    * @return Double value for optimal design.
+ * @throws RemoteException 
    */
-  public Double getOptimalValue(Function function) {
+  public Double getOptimalValue(FunctionInterface function) throws RemoteException {
   	double objective = 0.0;
   	minFunction = new GetFunction(function);
 

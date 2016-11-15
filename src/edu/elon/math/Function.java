@@ -30,7 +30,7 @@ import java.util.Observable;
  * @author dpowell2
  * @version 1.0
  */
-public abstract class Function extends Observable implements Remote, Serializable{
+public abstract class Function extends UnicastRemoteObject implements FunctionInterface{
 
   /**
 	 * 
@@ -61,15 +61,22 @@ public abstract class Function extends Observable implements Remote, Serializabl
   private Strategy strategy;
 
   private String title;
+  
+  public ArrayList<ObserverObject> observers = new ArrayList<ObserverObject>();
+  
+  public String env; 
+  
+  public boolean changed;
 
   /**
    * Default constructor
    */
-  public Function(){
-//    Remote r = UnicastRemoteObject.exportObject(this, 0);
+  public Function() throws RemoteException{
+
   }
   
   public void setStrategy(Strategy aStrategy){
+	System.out.println("got here");
   	strategy = aStrategy;
   }
   
@@ -77,12 +84,33 @@ public abstract class Function extends Observable implements Remote, Serializabl
    * notifies the observers that data has changed, and calls all update methods
    */
   
-  public void valuesChanged(){
+  public void valuesChanged() throws RemoteException{
 	  setChanged();
 	  notifyObservers();
   }
 
-  /**
+  public void notifyObservers() throws RemoteException {
+	  
+	  for(int i = 0 ; i < observers.size(); i++){
+		  ObserverObject o = observers.get(i);
+		  if(this.changed == true){
+			  o.update(this);
+		  }
+	  }
+	  
+}
+
+  public void setChanged() {
+	if(changed == false){
+		changed = true;
+	}
+	else{
+		changed = false;
+	}
+	
+}
+
+/**
    * Evaluates the current set of input values to calculate the
    * function value. We currently consider one output value for a
    * function. If the function has multiple output values then the
@@ -90,8 +118,9 @@ public abstract class Function extends Observable implements Remote, Serializabl
    * 
    * @return Double of function result from evaluation at current
    *         point.
+ * @throws RemoteException 
    */
-  public abstract Double evaluate();
+  public abstract Double evaluate() throws RemoteException;
 
   /**
    * Returns an ArrayList of String for the names of each input
@@ -144,6 +173,11 @@ public abstract class Function extends Observable implements Remote, Serializabl
   public String getTitle() {
     return title;
   }
+  
+  public String getEnv() throws RemoteException{
+	  env = System.getenv("optimizers");
+	  return env;
+  }
 
   /**
    * Gets the direction of the optimization problem. If true then we
@@ -161,8 +195,9 @@ public abstract class Function extends Observable implements Remote, Serializabl
    * function in <code>inputValues</code> and <code>output</code>
    * 
    * @return Double representing best achieved function value.
+ * @throws RemoteException 
    */
-  public Double optimize() {
+  public Double optimize() throws RemoteException {
     Function function = this;
     Double optimalValue = strategy.getOptimalValue(function);
     
@@ -231,10 +266,11 @@ public abstract class Function extends Observable implements Remote, Serializabl
    * Sets the value of the function result.
    * 
    * @param output Double instance of function result
+ * @throws RemoteException 
    */
-  public void setOutput(Double output) {
+  public void setOutput(Double output) throws RemoteException {
     this.output = output;
-    valuesChanged();
+    notifyObservers();
   }
 
   /**
@@ -261,6 +297,16 @@ public abstract class Function extends Observable implements Remote, Serializabl
       s.append(getInputNames().get(i) + SPACE + getInputValues().get(i) + EOL);
     }
     return s.toString();
+  }
+  
+  public void addObserver(ObserverObject o){
+	  observers.add(o);
+	  
+  }
+  public void removeObserver(ObserverObject o){
+	  
+	  observers.remove(o);
+	  
   }
 
 }

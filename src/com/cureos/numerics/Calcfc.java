@@ -24,6 +24,8 @@
  */
 package com.cureos.numerics;
 
+import java.rmi.RemoteException;
+
 /**
  * Interface for calculation of objective function and constraints in
  * COBYLA2 optimization.
@@ -41,6 +43,7 @@ public interface Calcfc {
    *        constraints calculation.
    * @param con Calculated function values of the constraints.
    * @return Calculated objective function value.
+ * @throws RemoteException 
    */
-  double Compute(int n, int m, double[] x, double[] con);
+  double Compute(int n, int m, double[] x, double[] con) throws RemoteException;
 }

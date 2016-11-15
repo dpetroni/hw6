@@ -16,7 +16,7 @@ public class FunctionServer {
 			Dell dell = new Dell();
 			SamsClub samsClub = new SamsClub();
 			MinimumAbsoluteSum mas = new MinimumAbsoluteSum();
-			String env = "edu.elon.math.NelderMead,edu.elon.math.RandomWalk,edu.elon.math.Powell";
+			String env = System.getenv("optimizers");
 			System.out.println("binding to registry...");
 			Context namingContext = new InitialContext();
 			//namingContext.bind("rmi:env", env);

@@ -6,6 +6,7 @@
  * All Rights Reserved
  */
 package edu.elon.math;
+import java.rmi.RemoteException;
 /*
  * Copyright October 10, 2016
  *
@@ -93,8 +94,9 @@ public class RandomWalk implements Strategy{
    * 
    * @param f Function instance
    * @return Double instance containing best objective value
+ * @throws RemoteException 
    */
-  public Double getOptimalValue(Function f) {
+  public Double getOptimalValue(FunctionInterface f) throws RemoteException {
     Double currentValue;
     ArrayList<Double> currentValues = new ArrayList<Double>();
     int size = f.getInputValues().size();
@@ -111,7 +113,7 @@ public class RandomWalk implements Strategy{
       }
       f.setInputValues(currentValues);
       currentValue = f.evaluate();
-      f.valuesChanged();
+      //f.valuesChanged();
       //
       if (!f.isMinimize()) {
         if (currentValue.doubleValue() > optimalValue.doubleValue()) {
@@ -128,6 +130,7 @@ public class RandomWalk implements Strategy{
     // set best inputs and value in f
     f.setInputValues(bestInputValues);
     f.setOutput(optimalValue);
+    System.out.println("here yet heerejalkdsfjflkds:"+optimalValue);
     return optimalValue;
   }
 

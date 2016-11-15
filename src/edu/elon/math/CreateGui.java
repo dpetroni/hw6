@@ -1,5 +1,8 @@
 package edu.elon.math;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
 /*
  * Copyright October 10, 2016
  *
@@ -26,23 +29,31 @@ import javax.swing.JTextField;
  * Creates a gui dynamically 
  */
 
-public class CreateGui implements Observer {
+public class CreateGui extends UnicastRemoteObject implements ObserverObject {
 	
+	protected CreateGui() throws RemoteException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
 	Store store = new Store();
 	
 	private ArrayList<JTextField> textFields = new ArrayList<JTextField>();
 	private ArrayList<Double> newValues;
 	private JComboBox box;
 	private JTextField result;
+//	public String[] envResult;
 	
-	private Observable observable;
 	
+//	private ObserverObject observable;
+//	
 //	public CreateGui(Observable observable){
 //		this.observable = observable;
 //		observable.addObserver(this);
 //	}
 //	
-	private Function function;
+	private FunctionInterface function;
 	
 	/**
 	 * Method used to dynamically create the gui specific for each of the three functions
@@ -50,16 +61,27 @@ public class CreateGui implements Observer {
 	 * @param envResult
 	 * @param x
 	 * @param y
+	 * @throws RemoteException 
 	 */
-	public void createGui(Function function, String[] envResult, int x, int y){
+	
+	
+	
+	public void createGui(FunctionInterface function, int x, int y) throws RemoteException{
 		
-		this.observable = function;
-		observable.addObserver(this);
+		
+		
+		
+		
+		this.function = (FunctionInterface) function;
+		function.addObserver(this);
+		
+		
+		String preResult = "edu.elon.math.NelderMead,edu.elon.math.RandomWalk,edu.elon.math.Powell";
+		//String preResult = function.getEnv();
+		String[] envResult = preResult.split(",");
 		
 		JPanel main = new JPanel();
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
-		
-		this.function = function;
 
 		ArrayList<String> inputNames = function.getInputNames();
 		ArrayList<Double> inputValues = function.getInputValues();
@@ -122,12 +144,32 @@ public class CreateGui implements Observer {
 					for (int i = 0; i<textFields.size(); i++){
 						newValues.add(Double.parseDouble(textFields.get(i).getText()));
 					}
-					function.setInputValues(newValues);
+					try {
+						function.setInputValues(newValues);
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					String a = (String) box.getSelectedItem();
 						Strategy strategy = store.instantiateStrategy(a);
-						function.setStrategy(strategy);
-						function.optimize();
-//						result.setText(""+strategy.getOptimalValue(function));	
+//						try {
+//							function.setStrategy(strategy);
+//						} catch (RemoteException e1) {
+//							// TODO Auto-generated catch block
+//							e1.printStackTrace();
+//						}
+//						try {
+//							function.optimize();
+//						} catch (RemoteException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+						try {
+							result.setText(""+strategy.getOptimalValue(function));
+						} catch (RemoteException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}	
 						
 				}
 			});
@@ -144,12 +186,26 @@ public class CreateGui implements Observer {
 					for (int i = 0; i<textFields.size(); i++){
 						newValues.add(Double.parseDouble(textFields.get(i).getText()));
 					}
-					function.setInputValues(newValues);
-//					function.valuesChanged();
-//				  result.setText(""+function.evaluate());
-					function.evaluate();
+					try {
+						function.setInputValues(newValues);
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+//					try {
+//						function.valuesChanged();
+//					} catch (RemoteException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+					try {
+						result.setText(""+function.evaluate());
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				    
-					//newValues.clear();
+					newValues.clear();
 				}
 				});
 			t2.start();
@@ -161,18 +217,16 @@ public class CreateGui implements Observer {
  * 
  * updates the gui with new observed data
  */
-	@Override
-	public void update(Observable o, Object arg) {
+	public void update(FunctionInterface o) throws RemoteException {
 		
-		if(o instanceof Function){
-			
-			Function function = (Function)o;
-			ArrayList<Double> temp = function.getInputValues();
+		if(o instanceof FunctionInterface){
+
+			ArrayList<Double> temp = o.getInputValues();
 			
 			for (int i = 0; i < textFields.size(); i++){
 				textFields.get(i).setText(temp.get(i).toString());
 			}
-			result.setText(""+function.getOutput());
+			result.setText(""+o.getOutput());
 			
 		}
 	}

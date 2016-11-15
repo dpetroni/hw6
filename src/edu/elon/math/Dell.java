@@ -7,6 +7,8 @@
  */
 package edu.elon.math;
 
+import java.rmi.RemoteException;
+
 /*
  * Copyright October 10, 2016
  *
@@ -29,8 +31,9 @@ public class Dell extends Function {
 
   /**
    * Default constructor to set initial input point to (0, 0)
+ * @throws RemoteException 
    */
-  public Dell() {
+  public Dell() throws RemoteException {
     this(new double[] { 0, 0 });
 
   }
@@ -41,8 +44,9 @@ public class Dell extends Function {
    * 
    * @param inputValues ArrayList<Double> representing values for
    *        initial design point.
+ * @throws RemoteException 
    */
-  public Dell(ArrayList<Double> inputValues) {
+  public Dell(ArrayList<Double> inputValues) throws RemoteException {
     this(inputValues, createDefaultInputNames());
   }
 
@@ -55,7 +59,7 @@ public class Dell extends Function {
    * @param inputNames ArrayList<String> representing names of each
    *        input parameter
    */
-  public Dell(ArrayList<Double> inputValues, ArrayList<String> inputNames) {
+  public Dell(ArrayList<Double> inputValues, ArrayList<String> inputNames) throws RemoteException {
     this.setInputValues(inputValues);
     this.setInputNames(inputNames);
     this.setMinimize(true);
@@ -69,7 +73,7 @@ public class Dell extends Function {
    * @param inputs double[] array of values to set initial design
    *        point.
    */
-  public Dell(double[] inputs) {
+  public Dell(double[] inputs) throws RemoteException{
     ArrayList<Double> values = new ArrayList<Double>();
     for (double d : inputs) {
       values.add(new Double(d));
@@ -97,9 +101,10 @@ public class Dell extends Function {
    * Evaluates the function from the current set of input values.
    * 
    * @return Double instance of function value
+ * @throws RemoteException 
    */
   @Override
-  public Double evaluate() {
+  public Double evaluate() throws RemoteException {
     double x1 = getInputValues().get(0).doubleValue();
     double y1 = getInputValues().get(1).doubleValue();
     double[] cost = { 7.9, 25, 13.1, 17.4, 19.5, 13, 17.8, 8.0, 9.2, 6.3, 42.0, 6.6 };

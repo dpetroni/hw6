@@ -24,6 +24,8 @@
  */
 package com.cureos.numerics;
 
+import java.rmi.RemoteException;
+
 /**
  * Constrained Optimization BY Linear Approximation in Java.
  * 
@@ -66,11 +68,12 @@ public class Cobyla {
    * @param maxfun Maximum number of function evaluations before
    *        terminating.
    * @return Exit status of the COBYLA2 optimization.
+ * @throws RemoteException 
    */
   public static CobylaExitStatus FindMinimum(final Calcfc calcfc, int n, int m,
                                              double[] x, double rhobeg,
                                              double rhoend, int iprint,
-                                             int maxfun) {
+                                             int maxfun) throws RemoteException {
     // This subroutine minimizes an objective function F(X) subject to
     // M
     // inequality constraints on X, where X is a vector of variables
@@ -180,9 +183,10 @@ public class Cobyla {
        * @param x the value of x
        * @param con the value of con
        * @return the double
+     * @throws RemoteException 
        */
       @Override
-      public double Compute(int n, int m, double[] x, double[] con) {
+      public double Compute(int n, int m, double[] x, double[] con) throws RemoteException {
         double[] ix = new double[n];
         System.arraycopy(x, 1, ix, 0, n);
         double[] ocon = new double[m];
@@ -201,7 +205,7 @@ public class Cobyla {
 
   private static CobylaExitStatus cobylb(Calcfc calcfc, int n, int m, int mpp,
                                          double[] x, double rhobeg,
-                                         double rhoend, int iprint, int maxfun) {
+                                         double rhoend, int iprint, int maxfun) throws RemoteException {
     // N.B. Arguments CON, SIM, SIMI, DATMAT, A, VSIG, VETA, SIGBAR,
     // DX, W & IACT
     // have been removed.

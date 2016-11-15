@@ -11,13 +11,14 @@ import java.rmi.RemoteException;
  * 
  * Interface used in the Strategy design pattern
  */
-public interface Strategy extends Remote{
+public interface Strategy{
 	
   /**
    * gets the optimal value from whatever function type the user selects
    * @param function
    * @return
+ * @throws RemoteException 
    */
-  public Double getOptimalValue(Function function);
+  public Double getOptimalValue(FunctionInterface function) throws RemoteException;
 
 }

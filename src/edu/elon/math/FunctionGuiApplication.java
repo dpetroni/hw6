@@ -31,15 +31,15 @@ import javafx.scene.control.ComboBox;
 /**
  * starts the application, gets the environmental variables, and creates the GUIs
  */
-public class FunctionGuiApplication extends JFrame {
+public class FunctionGuiApplication  {
 
   /**
 	 * 
 	 */
 	private static final long serialVersionUID = 3142558297899374758L;
-private static String[] envResult;
+    private static String[] envResult;
 
-  public static void main(String[] args){
+    public static void main(String[] args){
  
 	
     //String preResult = System.getenv("optimizers");
@@ -51,9 +51,9 @@ private static String[] envResult;
     
     System.setProperty("java.security.policy", "client.policy");
     System.setSecurityManager(new SecurityManager());
-	Dell DellObject;
-  	SamsClub samsClubObject; 
-  	MinimumAbsoluteSum masObject;
+	FunctionInterface DellObject;
+  	FunctionInterface samsClubObject; 
+  	FunctionInterface masObject;
     String url = "rmi://localhost/";
     if (args.length == 1){
     	url="rmi://"+args[0]+"/";
@@ -63,22 +63,26 @@ private static String[] envResult;
     	
     	Context namingContext = new InitialContext();
     	
-    	DellObject = (Dell) namingContext.lookup(url + "Dell");
-    	samsClubObject = (SamsClub) namingContext.lookup(url + "SamsClub");
-    	masObject = (MinimumAbsoluteSum) namingContext.lookup(url + "MinimumAbsoluteSum");
+    	DellObject = (FunctionInterface) namingContext.lookup(url + "Dell");
+    	samsClubObject = (FunctionInterface) namingContext.lookup(url + "SamsClub");
+    	masObject = (FunctionInterface) namingContext.lookup(url + "MinimumAbsoluteSum");
     	
-        String preResult = "edu.elon.math.NelderMead,edu.elon.math.RandomWalk,edu.elon.math.Powell";
+    	//String preResult = DellObject.getEnv();
+    	//System.out.println("it is... " + DellObject.getEnv());
+    	
+        //String preResult = "edu.elon.math.NelderMead,edu.elon.math.RandomWalk,edu.elon.math.Powell";
         //String preResult = (String) namingContext.lookup(url + "env");
-        envResult = preResult.split(",");
+        //String preResult = System.getenv("optimizers");
+        //envResult = preResult.split(",");
     	
     	
         CreateGui samsClubGui = new CreateGui();
         CreateGui DellGui = new CreateGui();
         CreateGui MAS = new CreateGui();
-    	
-        samsClubGui.createGui(samsClubObject, envResult, 0,0);
-        DellGui.createGui(DellObject, envResult,350,0);
-        MAS.createGui(masObject, envResult,175,250);
+        
+        samsClubGui.createGui(samsClubObject, 0,0);
+        DellGui.createGui(DellObject,350,0);
+        MAS.createGui(masObject,175,250);
     }
     catch(Exception e){
     	e.printStackTrace();

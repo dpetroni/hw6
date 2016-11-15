@@ -6,6 +6,7 @@
  * All Rights Reserved
  */
 package edu.elon.math;
+import java.rmi.RemoteException;
 /*
  * Copyright October 10, 2016
  *
@@ -26,9 +27,10 @@ public class SamsClub extends Function {
 
   /**
    * Default constructor to set initial input point to (-5, 0)
+ * @throws RemoteException 
    * 
    */
-  public SamsClub() {
+  public SamsClub() throws RemoteException {
     this(new double[] { -5, 0 });
   }
 
@@ -38,8 +40,9 @@ public class SamsClub extends Function {
    * 
    * @param inputs ArrayList<Double> representing values for initial
    *        design point.
+ * @throws RemoteException 
    */
-  public SamsClub(ArrayList<Double> inputs) {
+  public SamsClub(ArrayList<Double> inputs) throws RemoteException {
     this(inputs, createDefaultInputNames());
   }
 
@@ -52,7 +55,7 @@ public class SamsClub extends Function {
    * @param names ArrayList<String> representing names of each input
    *        parameter
    */
-  public SamsClub(ArrayList<Double> values, ArrayList<String> names) {
+  public SamsClub(ArrayList<Double> values, ArrayList<String> names) throws RemoteException {
     this.setInputValues(values);
     this.setInputNames(names);
     this.setMinimize(false);
@@ -66,7 +69,7 @@ public class SamsClub extends Function {
    * @param inputs double[] array of values to set initial design
    *        point.
    */
-  public SamsClub(double[] inputs) {
+  public SamsClub(double[] inputs) throws RemoteException {
     ArrayList<Double> values = new ArrayList<Double>();
     for (double d : inputs) {
       values.add(new Double(d));
@@ -111,9 +114,10 @@ public class SamsClub extends Function {
    * Evaluates the function from the current set of input values.
    * 
    * @return Double instance of function value
+ * @throws RemoteException 
    */
   @Override
-  public Double evaluate() {
+  public Double evaluate() throws RemoteException {
     double x = getInputValues().get(0).doubleValue();
     double y = getInputValues().get(1).doubleValue();
     double cost =
